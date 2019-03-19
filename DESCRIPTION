@@ -1,0 +1,20 @@
+Package: clusterSSH
+Type: Package
+Version: 0.1.0
+Date: 2019-03-18
+Title: Launch R Code in Parallel on a Cluster via SSH
+Authors@R: c(person("Georg", "Schnabel", role = c("aut", "cre"),
+		     email = "georg.schnabel@nucleardata.com"))
+Author: Georg Schnabel [aut, cre],
+Maintainer: Georg Schnabel <georg.schnabel@nucleardata.com>
+Depends:
+    R (>= 3.1.0)
+Description: Functions written in R can be applied 
+    to the elements of a list in parallel on a compute cluster. 
+    The communication with the cluster is done via SSH.  
+License: GPL (>= 3)
+URL: https://www.r-project.org, https://github.com/gschnabel/clusterSSH
+BugReports: https://github.com/gschnabel/clusterSSH/issues
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1
