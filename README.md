@@ -54,7 +54,7 @@ and take actions accordingly, such as starting a calculation.
 
 In order to make communication work, a working directory, say `tempdir.loc`,
 has to be chosen on the local machine and another one, say `tempdir.rem` has to
-be selected on the remote machine (the worker node accessible via SSH).
+be selected on the shared filesystem accessible by the login node.
 These directories should be created before proceeding further.
 
 The following R code executed locally establishes the connection to the
