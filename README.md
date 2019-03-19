@@ -3,8 +3,8 @@
 This package enables the execution of R code on a cluster in parallel.
 A function amenable to parallelization using this package must take 
 one list as argument and return a list of the same length as the input list.
-The i-th element in the returned list must represent the output of the 
-obtained by processing the i-th element of the input list.
+The i-th element in the returned list must represent the output obtained by
+processing the i-th element of the input list.
 
 ## Requirements
 
@@ -47,7 +47,7 @@ that:
   computer and has also access to the shared filesystem. 
 
 Several ways to coordinate the nodes are in principle possible but in this
-example `ClusterSSH` will use the SSH connection to the login node to create
+example `clusterSSH` will use the SSH connection to the login node to create
 files on the shared filesystem to communicate with the worker nodes.
 Controller scripts on the workers nodes detect newly created files
 and take actions accordingly, such as starting a calculation.
@@ -55,7 +55,7 @@ and take actions accordingly, such as starting a calculation.
 In order to make communication work, a working directory, say `tempdir.loc`,
 has to be chosen on the local machine and another one, say `tempdir.rem` has to
 be selected on the remote machine (the worker node accessible via SSH).
-These directories should be created before proceeding here.
+These directories should be created before proceeding further.
 
 The following R code executed locally establishes the connection to the
 login node:
