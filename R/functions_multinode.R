@@ -137,11 +137,18 @@ functions_multinode <- list(
   },
 
 
-  startNodeController = function(clustObj) {
+  startNodeController = function(clustObj, maxNumCpus=Inf) {
 
     controlDir <- file.path(dirname(clustObj$getRemSharedDataDir()),"jobControl")
     dir.create(controlDir, showWarnings = FALSE)
     dput(substitute({
+
+      args <- commandArgs(trailingOnly=TRUE)
+      if (length(args)==0) {
+        maxNumCpus <- Inf
+      } else {
+        maxNumCpus <- as.numeric(args[1])
+      }
 
       controlDir <- insControlDir
       getNumTotCpus <- function() {
@@ -155,12 +162,12 @@ functions_multinode <- list(
 
       numTotCpus <- getNumTotCpus()
       getNumAvailCpus <- function() {
-        floor((1-getNodeLoad()) * numTotCpus * 3/4)
+        floor((1-getNodeLoad()) * numTotCpus)
       }
 
       getNumRunningTasks <- function() {
         cmdstr <- paste0("ps aux | grep -F 'sh ", file.path(controlDir, "running_"), "' | wc -l")
-        as.numeric(system(cmdstr, intern=TRUE))
+        as.numeric(system(cmdstr, intern=TRUE)) - 2
       }
 
       curHostname <- system("hostname", intern=TRUE)
@@ -177,9 +184,9 @@ functions_multinode <- list(
         if (length(runningJobDirs)==0) next
 
         runningJobPaths <- file.path(controlDir, runningJobDirs)
-        numAvailCpus <- max(0, min(getNumAvailCpus(),
-                                   floor(numTotCpus*3/4) - getNumRunningTasks()))
-
+        numAvailCpus <- max(0, min(max(getNumAvailCpus(),1),
+                                   numTotCpus - getNumRunningTasks(),
+                                   maxNumCpus))
         for (jobIdx in seq_along(runningJobDirs)) {
           curJobPath <- runningJobPaths[jobIdx]
           waitingTasks <- list.files(curJobPath, "^waiting_", full.names = FALSE)
@@ -214,9 +221,11 @@ functions_multinode <- list(
       }
     }, env=list(insControlDir=controlDir)),file=file.path(controlDir, "nodeController.R"))
 
-    cmdstr <- paste0("Rscript --vanilla ", file.path(controlDir, "nodeController.R"))
+    cmdstr <- paste0("Rscript --vanilla ", file.path(controlDir, "nodeController.R"), " ",
+		     as.character(maxNumCpus))
     # system(paste0("Rscript --vanilla ", file.path(controlDir, "nodeController.R")),wait=FALSE)
     cmdstr
   }
 
 )
+
