@@ -185,8 +185,7 @@ functions_multinode <- list(
 
         runningJobPaths <- file.path(controlDir, runningJobDirs)
         numAvailCpus <- max(0, min(max(getNumAvailCpus(),1),
-                                   numTotCpus - getNumRunningTasks(),
-                                   maxNumCpus))
+                                   min(numTotCpus, maxNumCpus) - getNumRunningTasks()))
         for (jobIdx in seq_along(runningJobDirs)) {
           curJobPath <- runningJobPaths[jobIdx]
           waitingTasks <- list.files(curJobPath, "^waiting_", full.names = FALSE)
